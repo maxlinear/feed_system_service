@@ -11,14 +11,14 @@ include $(INCLUDE_DIR)/kernel.mk
 
 #### Package Info ###############################
 PKG_NAME:=sse_fapi_lgm
-PKG_SOURCE_VERSION:=5.9.2.83
+PKG_SOURCE_VERSION:=5.9.2.87
 PKG_VERSION:=$(PKG_SOURCE_VERSION)
 PKG_SOURCE_PROTO:=git
 PKG_PROJECT:=maxlinear
 PKG_SOURCE_NAME:=sse_fapi
 CONFIG_UGW_PKG_SOURCE_URL:=ssh://git@github.com
 PKG_SOURCE_URL:=$(CONFIG_UGW_PKG_SOURCE_URL)/$(PKG_PROJECT)/$(PKG_SOURCE_NAME).git
-PKG_MIRROR_HASH:=460e0706edc26fd254adac0c5c4621de1079cc0837d0e52009c972313d9bc283
+PKG_MIRROR_HASH:=97635f4e074963e3a0a58b9f787984bae09893223ed9fda7b070697dd6ff05a6
 
 PKG_BUILD_DEPENDS:=mkimgvendor
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
@@ -29,7 +29,7 @@ PKG_MXL_LICENSE:=BSD/LICENSE
 PKG_CONFIG_DEPENDS += CONFIG_INTEL_X86_ENV_SZ
 TARGET_CFLAGS += -DCONFIG_SYS_REDUNDAND_ENVIRONMENT=1
 TARGET_CFLAGS += -DCONFIG_UBOOT_CONFIG_ENV_SIZE=$(CONFIG_INTEL_X86_ENV_SZ)
-TARGET_CFLAGS += -DPLATFORM_LGM
+TARGET_CFLAGS += -DPLATFORM_LGM -DLINUX_UPGRADE
 
 include $(INCLUDE_DIR)/package.mk
 -include $(INCLUDE_DIR)/package-version-override.mk
@@ -53,7 +53,7 @@ define Package/$(PKG_NAME)-$(1)
   TITLE:=UGW Funtional APIs secure fapi - $(1) Test Utility
   URL:=http://www.maxlinear.com
   MAINTAINER:=MaxLinear Inc
-  DEPENDS:=+sse_fapi_lgm +libsafec3-7 +libfdt +libscapi @INTEL_X86_SECBOOT
+  DEPENDS:=+sse_fapi_lgm +libsafec3-7 +libfdt +libscapi @INTEL_X86_SECBOOT +MXLTEE:liboptee-client +MXLTEE:libopenssl
 endef
 
 define Package/$(PKG_NAME)-$(1)/description
@@ -93,7 +93,7 @@ ifeq ($(CONFIG_LGM_SECURE_BOOT_AUTH_SUPPORT),y)
 TARGET_CFLAGS += -DSECURE_BOOT_AUTH_SUPPORT
 endif
 
-SS_TEST_UTILS:= sse_test_app sse_ctest_util secdbg_ctest
+SS_TEST_UTILS:= sse_test_app sse_ctest_util secdbg_ctest secdbg_test_app
 
 ifeq ($(CONFIG_INTEL_X86_SECBOOT),y)
 TARGET_CFLAGS += -DLGM_SECURE

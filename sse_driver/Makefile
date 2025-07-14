@@ -1,5 +1,5 @@
 #
-# Copyright © 2020-2023 MaxLinear, Inc.
+# Copyright © 2020-2024 MaxLinear, Inc.
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=sse_driver
-PKG_SOURCE_VERSION:=5.6.1.6
+PKG_SOURCE_VERSION:=5.6.1.9
 PKG_VERSION:=$(PKG_SOURCE_VERSION)
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
@@ -17,7 +17,7 @@ PKG_SOURCE_NAME:=system_service
 CONFIG_UGW_PKG_SOURCE_URL:=ssh://git@github.com
 PKG_SOURCE_INNERDIR:=sse_driver_src
 PKG_SOURCE_URL:=$(CONFIG_UGW_PKG_SOURCE_URL)/$(PKG_PROJECT)/$(PKG_SOURCE_NAME).git
-PKG_MIRROR_HASH:=43ec3a41fdc378c9e68b4efacd184a98970561db4dfb835facd8bd0c6d8bf085
+PKG_MIRROR_HASH:=e3b1667fea488623ebe0ee566878b5f551ece66599fad50a6ae9ce7a9b935cbc
 
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_IS_KERNEL_MODULE:=y
@@ -57,7 +57,7 @@ PKG_EXTRA_CFLAGS += -DEIP123_DEF
 endif
 
 ifeq ($(CONFIG_EIP123_DEBUG),y)
-PKG_EXTRA_CFLAGS += -DDEBUG -DSSE_TEST_STUB
+PKG_EXTRA_CFLAGS += -DDEBUG -DSSE_TEST_STUB -Werror=frame-larger-than=4272
 endif
 
 ifeq ($(CONFIG_X86_64),y)
@@ -80,7 +80,7 @@ define Build/Compile
 	$(MAKE) -C "$(LINUX_DIR)" \
 		CROSS_COMPILE="$(TARGET_CROSS)" \
 		ARCH="$(LINUX_KARCH)" \
-		SUBDIRS="$(PKG_BUILD_DIR)" \
+		M="$(PKG_BUILD_DIR)" \
 		EXTRA_CFLAGS+="$(PKG_EXTRA_CFLAGS)" \
 		modules
 endef

@@ -12,7 +12,7 @@ include $(INCLUDE_DIR)/kernel.mk
 
 #### Package Info ###############################
 PKG_NAME:=sse_fapi
-PKG_SOURCE_VERSION:=5.8.1.12
+PKG_SOURCE_VERSION:=5.8.1.18
 PKG_VERSION:=$(PKG_SOURCE_VERSION)
 PKG_SOURCE_PROTO:=git
 PKG_PROJECT:=maxlinear
@@ -20,7 +20,7 @@ PKG_SOURCE_NAME:=system_service
 CONFIG_UGW_PKG_SOURCE_URL:=ssh://git@github.com
 PKG_SOURCE_INNERDIR:=sse_fapi_src
 PKG_SOURCE_URL:=$(CONFIG_UGW_PKG_SOURCE_URL)/$(PKG_PROJECT)/$(PKG_SOURCE_NAME).git
-PKG_MIRROR_HASH:=a2e716002cfe4dd980036f363386d65504d565d5e76dc6934624450674145a7f
+PKG_MIRROR_HASH:=7ecce6e8a18f02ebc30481016bdd6cd98665a5d9ebd88df3501867a4c65d01e7
 
 PKG_BUILD_DEPENDS:=mkimgvendor
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
@@ -47,7 +47,9 @@ define Package/$(PKG_NAME)
   TITLE:=Secure FAPI for Encrypt and Decrypt APIs.
   URL:=http://www.maxlinear.com
   MAINTAINER:=MaxLinear Inc
-  DEPENDS:=+kmod-sse_driver +kmod-sse_storage_drv +libhelper +libsafec3-7 @TARGET_intel_mips
+  DEPENDS:=+libhelper +libsafec3-7 @TARGET_intel_mips \
+	 +@(INTEL_MIPS_SECBOOT):kmod-sse_driver \
+	 +@(INTEL_MIPS_SECBOOT):kmod-sse_storage_drv
 endef
 
 define SSTestPkg
@@ -75,9 +77,13 @@ define Package/$(PKG_NAME)/description
 	Secure FAPI for Encrypt and Decrypt APIs.
 endef
 
-
 ifeq ($(CONFIG_EIP123_SUPPORT),y)
 TARGET_CFLAGS += -DEIP123_DEF
+endif
+
+ifeq ($(CONFIG_INTEL_MIPS_SECBOOT),y)
+TARGET_CFLAGS += -DMIPS_SECURE
+export MIPS_SECURE=1
 endif
 
 ifeq ($(CONFIG_EIP123_DEBUG),y)
@@ -90,6 +96,7 @@ endif
 
 ifeq ($(CONFIG_TARGET_intel_mips_prx300),y)
 TARGET_CFLAGS += -DCONFIG_PON_FW_DOWNLOAD
+TARGET_CFLAGS += -DCONFIG_UBOOT_CONFIG_ENV_SIZE=0x4000 -DCONFIG_SYS_REDUNDAND_ENVIRONMENT=1
 endif
 
 ifeq ($(CONFIG_MTD_UBI),y)

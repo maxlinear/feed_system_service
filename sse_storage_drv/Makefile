@@ -1,5 +1,5 @@
 #
-# Copyright © 2020-2023 MaxLinear, Inc.
+# Copyright © 2020-2024 MaxLinear, Inc.
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=sse_storage_drv
-PKG_SOURCE_VERSION:=5.11.1.5
+PKG_SOURCE_VERSION:=5.11.1.7
 PKG_VERSION:=$(PKG_SOURCE_VERSION)
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
@@ -17,7 +17,7 @@ PKG_SOURCE_NAME:=system_service
 CONFIG_UGW_PKG_SOURCE_URL:=ssh://git@github.com
 PKG_SOURCE_INNERDIR:=sse_storage_src
 PKG_SOURCE_URL:=$(CONFIG_UGW_PKG_SOURCE_URL)/$(PKG_PROJECT)/$(PKG_SOURCE_NAME).git
-PKG_MIRROR_HASH:=348b8feb0706eb1643afbaf2962109f49a9bfa219c30468900c26b9f81ffee81
+PKG_MIRROR_HASH:=815c2f95deb6542b3f2eaa4cfff364aa6df0f4c027b776e614aa786816ba0f62
 
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_IS_KERNEL_MODULE:=y
@@ -66,7 +66,7 @@ define Build/Compile
 	$(MAKE) -C "$(LINUX_DIR)" \
 		CROSS_COMPILE="$(TARGET_CROSS)" \
 		ARCH="$(LINUX_KARCH)" \
-		SUBDIRS="$(PKG_BUILD_DIR)" \
+		M="$(PKG_BUILD_DIR)" \
 		EXTRA_CFLAGS+="$(PKG_EXTRA_CFLAGS)" \
 		modules
 endef
