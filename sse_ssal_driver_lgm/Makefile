@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=sse_ssal_driver_lgm
-PKG_SOURCE_VERSION:=5.14.1.17
+PKG_SOURCE_VERSION:=5.14.1.19
 PKG_VERSION:=$(PKG_SOURCE_VERSION)
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
