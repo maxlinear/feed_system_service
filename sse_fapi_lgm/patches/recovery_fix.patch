@@ -1,0 +1,41 @@
+--- a/fapi_img_auths.c	2025-09-18 07:18:07.000000000 -0700
++++ b/fapi_img_auths.c	2025-10-10 04:26:00.668945606 -0700
+@@ -2067,6 +2067,15 @@
+ 		return -ECANCELED;
+ 	}
+ 
++	if (get_uboot_param("udt_status", cPath) != 0) {
++		fprintf(stderr, "Failed to get variable\n");
++		return -ENOENT;
++	}
++	if (atoi(cPath) != UDT_IMAGE_NO_ACTION) {
++		fprintf(stderr, "Previous Upgrade not completed yet as udt_status is %d!!!\n", atoi(cPath));
++		return -ECANCELED;
++	}
++
+ 	if (set_uboot_param_str("active_bank", actbnk) != 0) {
+ 		fprintf(stderr, "Failed to set active_bank\n");
+ 		nRet = -EPERM;
+@@ -2196,6 +2205,10 @@
+ 				fprintf(stderr, "Fail to set 'udt_status' to zero\n");
+ 				ret = -EPERM;
+ 			}
++			if (set_uboot_param_int("boot_count", 0) != 0) {
++				fprintf(stderr, "Fail to set 'boot_count' to zero\n");
++				ret = -EPERM;
++			}
+ 		}
+ 	} else {
+ 		
+@@ -2288,6 +2301,11 @@
+ 			ret = -EPERM;
+ 			goto finish;
+ 		}
++		if (set_uboot_param_int("boot_count", 0) != 0) {
++			fprintf(stderr, "Fail to set 'boot_count' to zero\n");
++			ret = -EPERM;
++			goto finish;
++		}
+ 	}
+ finish:
+ 	return ret;
