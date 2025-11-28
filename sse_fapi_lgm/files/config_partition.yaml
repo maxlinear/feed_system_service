@@ -1,0 +1,20 @@
+bootloader:
+  name: uboot
+  part: u-boot
+  early_boot: Yes
+rbe:
+  name: rbe
+  part: rbe
+  early_boot: Yes
+kernel-dtb:
+  name: kernel-dtb
+  part: kernel
+  early_boot: No
+rootfs:
+  name: filesystem
+  part: kernel
+  early_boot: No
+tep:
+  name: tep
+  part: tep
+  early_boot: Yes

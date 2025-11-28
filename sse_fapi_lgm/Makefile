@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2024 MaxLinear, Inc.
+# Copyright (C) 2020-2025 MaxLinear, Inc.
 # Copyright (C) 2017-2018 Intel Corporation
 #
 # Makefile for secure fapi
@@ -11,7 +11,7 @@ include $(INCLUDE_DIR)/kernel.mk
 
 #### Package Info ###############################
 PKG_NAME:=sse_fapi_lgm
-PKG_SOURCE_VERSION:=5.9.2.90
+PKG_SOURCE_VERSION:=5.9.2.102
 PKG_VERSION:=$(PKG_SOURCE_VERSION)
 PKG_SOURCE_PROTO:=git
 PKG_PROJECT:=maxlinear
@@ -19,7 +19,7 @@ PKG_SOURCE_NAME:=sse_fapi
 CONFIG_UGW_PKG_SOURCE_URL:=https://github.com
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 PKG_SOURCE_URL:=$(CONFIG_UGW_PKG_SOURCE_URL)/$(PKG_PROJECT)/$(PKG_SOURCE_NAME).git
-PKG_MIRROR_HASH:=dc72b45231325042426e5cb791ede3abdc6d7864a62175030eae23447f710b9d
+PKG_MIRROR_HASH:=a385764874787dc74a09131025d8a1b82aa786ca22ead74a5629d0c933a77906
 
 PKG_BUILD_DEPENDS:=mkimgvendor
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
@@ -30,7 +30,7 @@ PKG_MXL_LICENSE:=BSD/LICENSE
 PKG_CONFIG_DEPENDS += CONFIG_INTEL_X86_ENV_SZ
 TARGET_CFLAGS += -DCONFIG_SYS_REDUNDAND_ENVIRONMENT=1
 TARGET_CFLAGS += -DCONFIG_UBOOT_CONFIG_ENV_SIZE=$(CONFIG_INTEL_X86_ENV_SZ)
-TARGET_CFLAGS += -DPLATFORM_LGM -DLINUX_UPGRADE
+TARGET_CFLAGS += -DPLATFORM_LGM -DFIT_IMG
 
 include $(INCLUDE_DIR)/package.mk
 -include $(INCLUDE_DIR)/package-version-override.mk
@@ -120,13 +120,12 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/$(VENDOR_PATH)/usr/lib
-	$(INSTALL_DIR) $(1)/$(VENDOR_PATH)/etc/upgrade/
 	$(INSTALL_DIR) $(1)/$(VENDOR_PATH)/etc/sse/
 	$(INSTALL_DIR) $(1)/usr/share/pseudofs_acl/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(CP) ./files/upg_state_file $(1)/$(VENDOR_PATH)/etc/upgrade/.upg_state_file
 	$(CP) ./files/sse_lock $(1)/$(VENDOR_PATH)/etc/sse/
+	$(CP) ./files/config_partition.yaml $(1)/$(VENDOR_PATH)/etc/sse/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/libsecurefapi.so $(1)/$(VENDOR_PATH)/usr/lib/
 	$(INSTALL_DATA) ./files/ss_pseudofs_acl.json $(1)/usr/share/pseudofs_acl/
 endef
