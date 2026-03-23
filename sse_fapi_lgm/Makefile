@@ -119,14 +119,14 @@ define Build/InstallDev
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/$(VENDOR_PATH)/usr/lib
+	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_DIR) $(1)/$(VENDOR_PATH)/etc/sse/
 	$(INSTALL_DIR) $(1)/usr/share/pseudofs_acl/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(CP) ./files/sse_lock $(1)/$(VENDOR_PATH)/etc/sse/
 	$(CP) ./files/config_partition.yaml $(1)/$(VENDOR_PATH)/etc/sse/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/libsecurefapi.so $(1)/$(VENDOR_PATH)/usr/lib/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/libsecurefapi.so $(1)/usr/lib/
 	$(INSTALL_DATA) ./files/ss_pseudofs_acl.json $(1)/usr/share/pseudofs_acl/
 endef
 
